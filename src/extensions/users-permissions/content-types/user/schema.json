@@ -74,7 +74,7 @@
     "phoneNumber": {
       "type": "string"
     },
-    "Address": {
+    "address": {
       "type": "text"
     },
     "isSubscribed": {
@@ -97,6 +97,12 @@
       "relation": "oneToMany",
       "target": "api::address.address",
       "mappedBy": "users_permissions_user"
+    },
+    "cedula": {
+      "type": "string"
+    },
+    "birthdate": {
+      "type": "date"
     }
   }
 }
