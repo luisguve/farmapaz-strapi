@@ -372,12 +372,13 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
   collectionName: 'addresses';
   info: {
+    description: '';
     displayName: 'Address';
     pluralName: 'addresses';
     singularName: 'address';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     city: Schema.Attribute.String;
@@ -386,21 +387,24 @@ export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     details: Schema.Attribute.Text;
+    display_name: Schema.Attribute.String;
+    lat: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::address.address'
     > &
       Schema.Attribute.Private;
+    lon: Schema.Attribute.String;
+    place_id: Schema.Attribute.String;
     postalCode: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    sector: Schema.Attribute.String;
     state: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
-      'manyToOne',
+    user: Schema.Attribute.Relation<
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -1009,8 +1013,7 @@ export interface PluginUsersPermissionsUser
     draftAndPublish: false;
   };
   attributes: {
-    address: Schema.Attribute.Text;
-    addresses: Schema.Attribute.Relation<'oneToMany', 'api::address.address'>;
+    address: Schema.Attribute.Relation<'oneToOne', 'api::address.address'>;
     birthdate: Schema.Attribute.Date;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     cedula: Schema.Attribute.String;

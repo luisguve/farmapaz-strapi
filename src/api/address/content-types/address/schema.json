@@ -4,10 +4,11 @@
   "info": {
     "singularName": "address",
     "pluralName": "addresses",
-    "displayName": "Address"
+    "displayName": "Address",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -20,7 +21,7 @@
     "city": {
       "type": "string"
     },
-    "sector": {
+    "display_name": {
       "type": "string"
     },
     "details": {
@@ -29,11 +30,20 @@
     "postalCode": {
       "type": "string"
     },
-    "users_permissions_user": {
+    "lat": {
+      "type": "string"
+    },
+    "lon": {
+      "type": "string"
+    },
+    "place_id": {
+      "type": "string"
+    },
+    "user": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "addresses"
+      "mappedBy": "address"
     }
   }
 }

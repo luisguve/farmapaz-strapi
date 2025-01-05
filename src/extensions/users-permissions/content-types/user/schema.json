@@ -74,9 +74,6 @@
     "phoneNumber": {
       "type": "string"
     },
-    "address": {
-      "type": "text"
-    },
     "isSubscribed": {
       "type": "boolean"
     },
@@ -92,17 +89,17 @@
       "target": "api::subscription.subscription",
       "mappedBy": "users_permissions_user"
     },
-    "addresses": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::address.address",
-      "mappedBy": "users_permissions_user"
-    },
     "cedula": {
       "type": "string"
     },
     "birthdate": {
       "type": "date"
+    },
+    "address": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::address.address",
+      "inversedBy": "user"
     }
   }
 }
