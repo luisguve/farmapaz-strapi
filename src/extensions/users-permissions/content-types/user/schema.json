@@ -77,18 +77,6 @@
     "isSubscribed": {
       "type": "boolean"
     },
-    "orders": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::order.order",
-      "mappedBy": "users_permissions_user"
-    },
-    "subscriptions": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::subscription.subscription",
-      "mappedBy": "users_permissions_user"
-    },
     "cedula": {
       "type": "string"
     },
@@ -100,6 +88,18 @@
       "relation": "oneToOne",
       "target": "api::address.address",
       "inversedBy": "user"
+    },
+    "subscriptions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::subscription.subscription",
+      "mappedBy": "user"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "user"
     }
   }
 }

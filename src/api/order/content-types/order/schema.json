@@ -4,10 +4,11 @@
   "info": {
     "singularName": "order",
     "pluralName": "orders",
-    "displayName": "Order"
+    "displayName": "Order",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -17,29 +18,37 @@
     "orderStatus": {
       "type": "enumeration",
       "enum": [
-        "pending",
-        "in_process",
-        "delivered",
-        "cancelled"
+        "Pendiente",
+        "En proceso",
+        "Entregada",
+        "Cancelada"
       ]
-    },
-    "totalAmount": {
-      "type": "decimal"
     },
     "deliveryDate": {
       "type": "datetime"
     },
-    "products": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::product.product",
-      "inversedBy": "orders"
-    },
-    "users_permissions_user": {
+    "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "orders"
+    },
+    "subscription": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::subscription.subscription",
+      "inversedBy": "orders"
+    },
+    "productsDetails": {
+      "type": "json"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "totalAmount": {
+      "type": "decimal"
     }
   }
 }

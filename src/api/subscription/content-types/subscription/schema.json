@@ -4,10 +4,11 @@
   "info": {
     "singularName": "subscription",
     "pluralName": "subscriptions",
-    "displayName": "Subscription"
+    "displayName": "Subscription",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -17,23 +18,22 @@
     "frequency": {
       "type": "enumeration",
       "enum": [
-        "daily",
-        "weekly",
-        "monthly"
+        "Semanal",
+        "Mensual"
       ]
     },
-    "nextDeliveryDate": {
+    "nextOrderDate": {
       "type": "datetime"
     },
     "subscriptionStatus": {
       "type": "enumeration",
       "enum": [
-        "active",
-        "paused",
-        "cancelled"
+        "Activa",
+        "Pausada",
+        "Cancelada"
       ]
     },
-    "users_permissions_user": {
+    "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
@@ -44,6 +44,15 @@
       "relation": "manyToMany",
       "target": "api::product.product",
       "inversedBy": "subscriptions"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "subscription"
+    },
+    "quantities": {
+      "type": "json"
     }
   }
 }
