@@ -442,6 +442,41 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDeliveryDelivery extends Struct.CollectionTypeSchema {
+  collectionName: 'deliveries';
+  info: {
+    description: '';
+    displayName: 'Delivery';
+    pluralName: 'deliveries';
+    singularName: 'delivery';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.DateTime;
+    deliveryStatus: Schema.Attribute.Enumeration<['En proceso', 'Finalizado']>;
+    driver: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::delivery.delivery'
+    > &
+      Schema.Attribute.Private;
+    orders: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   collectionName: 'orders';
   info: {
@@ -457,17 +492,32 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    deliveries: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::delivery.delivery'
+    >;
     deliveryDate: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
     orderDate: Schema.Attribute.DateTime;
     orderStatus: Schema.Attribute.Enumeration<
-      ['Pendiente', 'En proceso', 'Entregada', 'Cancelada']
+      [
+        'Pendiente',
+        'En revision',
+        'Pagada',
+        'En proceso',
+        'Entregada',
+        'Cancelada',
+      ]
+    >;
+    paymentMethod: Schema.Attribute.Enumeration<
+      ['Divisa', 'Efectivo', 'Transferencia bancaria', 'Pago movil']
     >;
     products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
     productsDetails: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
+    reference: Schema.Attribute.String;
     subscription: Schema.Attribute.Relation<
       'manyToOne',
       'api::subscription.subscription'
@@ -1030,6 +1080,10 @@ export interface PluginUsersPermissionsUser
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    deliveries: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::delivery.delivery'
+    >;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
@@ -1086,6 +1140,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::address.address': ApiAddressAddress;
       'api::category.category': ApiCategoryCategory;
+      'api::delivery.delivery': ApiDeliveryDelivery;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::subscription.subscription': ApiSubscriptionSubscription;

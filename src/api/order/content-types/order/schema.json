@@ -19,6 +19,8 @@
       "type": "enumeration",
       "enum": [
         "Pendiente",
+        "En revision",
+        "Pagada",
         "En proceso",
         "Entregada",
         "Cancelada"
@@ -49,6 +51,24 @@
     },
     "totalAmount": {
       "type": "decimal"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "paymentMethod": {
+      "type": "enumeration",
+      "enum": [
+        "Divisa",
+        "Efectivo",
+        "Transferencia bancaria",
+        "Pago movil"
+      ]
+    },
+    "deliveries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::delivery.delivery",
+      "mappedBy": "orders"
     }
   }
 }
