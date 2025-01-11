@@ -451,14 +451,15 @@ export interface ApiDeliveryDelivery extends Struct.CollectionTypeSchema {
     singularName: 'delivery';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime;
-    deliveryStatus: Schema.Attribute.Enumeration<['En proceso', 'Finalizado']>;
+    deliveryDate: Schema.Attribute.DateTime;
+    deliveryStatus: Schema.Attribute.Enumeration<['En proceso', 'Finalizado']> &
+      Schema.Attribute.DefaultTo<'En proceso'>;
     driver: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
