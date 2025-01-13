@@ -5,7 +5,9 @@ module.exports = {
     const page = ctx.query.page || 1;
     let orders = await strapi.documents('api::order.order').findMany({
       filters: {
-        orderStatus: 'Pagada'
+        orderStatus: {
+          $in: ['Pagada', 'Pospuesta']
+        }
       },
       populate: {
         deliveries: true,
@@ -33,7 +35,7 @@ module.exports = {
         return false;
       }
       // Check if the order has an ongoing delivery.
-      const hasOngoingDelivery = order.deliveries.some(delivery => delivery.deliveryStatus !== 'Finalizado');
+      const hasOngoingDelivery = order.deliveries.some(delivery => delivery.deliveryStatus !== 'Finalizada');
       // If not, this order is able to be delivered.
       return !hasOngoingDelivery;
     })

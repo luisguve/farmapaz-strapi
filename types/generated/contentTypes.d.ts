@@ -458,7 +458,7 @@ export interface ApiDeliveryDelivery extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     deliveryDate: Schema.Attribute.DateTime;
-    deliveryStatus: Schema.Attribute.Enumeration<['En proceso', 'Finalizado']> &
+    deliveryStatus: Schema.Attribute.Enumeration<['En proceso', 'Finalizada']> &
       Schema.Attribute.DefaultTo<'En proceso'>;
     driver: Schema.Attribute.Relation<
       'manyToOne',
@@ -510,6 +510,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
         'En proceso',
         'Entregada',
         'Cancelada',
+        'Pospuesta',
       ]
     >;
     paymentMethod: Schema.Attribute.Enumeration<

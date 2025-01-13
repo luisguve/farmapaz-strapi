@@ -23,7 +23,8 @@
         "Pagada",
         "En proceso",
         "Entregada",
-        "Cancelada"
+        "Cancelada",
+        "Pospuesta"
       ]
     },
     "deliveryDate": {
