@@ -9,14 +9,14 @@ const { createCoreService } = require('@strapi/strapi').factories;
 
 module.exports = createCoreService('api::order.order', ({ strapi }) => ({
   async createOrder(subscriptionData) {
-    console.log('here0');
     let totalAmount = 0;
     const productsDetails = {};
     let selectedProducts = subscriptionData.products.map(product => {
       totalAmount += product.price * subscriptionData.quantities[product.id];
       productsDetails[product.id] = {
         quantity: subscriptionData.quantities[product.id],
-        price: product.price
+        price: product.price,
+        outOfStock: product.stock < subscriptionData.quantities[product.id]
       };
       return product;
     });

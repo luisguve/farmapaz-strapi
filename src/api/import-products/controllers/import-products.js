@@ -88,6 +88,16 @@ module.exports = {
       // Init products image folder.
       await strapi.service('api::product.product').getProductsFolder();
 
+      // Find each order that could not be processed for insufficient stock
+      const unsatisfiedOrders = await strapi.documents('api::order.order').findMany({
+        filters: {
+          orderStatus: {
+            $eq: 'Insatisfecha'
+          }
+        },
+        populate: ['products']
+      });
+
       // Create products
       const products = await Promise.all(data.map(async productData => {
         // Find product by name. if it doesn't exist, create it.
@@ -110,6 +120,35 @@ module.exports = {
         }
         return product;
       }));
+
+      unsatisfiedOrders.map(async order => {
+        const { productsDetails } = order;
+        await Promise.all(order.products.map(async product => {
+          if (productsDetails[product.id].outOfStock) {
+            // check if product stock is sufficient
+            if (product.stock >= productsDetails[product.id].quantity) {
+              // update product stock, then set outOfStock to false in productsDetails
+              await strapi.documents('api::product.product').update({
+                documentId: product.documentId,
+                data: {
+                  stock: product.stock - productsDetails[product.id].quantity,
+                }
+              });
+              productsDetails[product.id].outOfStock = false;
+            }
+          }
+        }))
+        // Check if all products were updated.
+        if (Object.values(productsDetails).every(product => !product.outOfStock)) {
+          // Update order status to 'Pendiente'.
+          await strapi.documents('api::order.order').update({
+            documentId: order.documentId,
+            data: {
+              orderStatus: 'Pendiente'
+            }
+          });
+        }
+      });
 
       ctx.body = {
         success: true,
