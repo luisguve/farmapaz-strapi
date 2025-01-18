@@ -24,7 +24,8 @@
         "En proceso",
         "Entregada",
         "Cancelada",
-        "Pospuesta"
+        "Pospuesta",
+        "Insatisfecha"
       ]
     },
     "deliveryDate": {
@@ -70,6 +71,9 @@
       "relation": "manyToMany",
       "target": "api::delivery.delivery",
       "mappedBy": "orders"
+    },
+    "paymentDate": {
+      "type": "datetime"
     }
   }
 }

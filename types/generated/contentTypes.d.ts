@@ -511,8 +511,10 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
         'Entregada',
         'Cancelada',
         'Pospuesta',
+        'Insatisfecha',
       ]
     >;
+    paymentDate: Schema.Attribute.DateTime;
     paymentMethod: Schema.Attribute.Enumeration<
       ['Divisa', 'Efectivo', 'Transferencia bancaria', 'Pago movil']
     >;
@@ -591,6 +593,7 @@ export interface ApiSubscriptionSubscription
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     frequency: Schema.Attribute.Enumeration<['Semanal', 'Mensual']>;
+    lastOrderDate: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

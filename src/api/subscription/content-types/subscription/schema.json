@@ -53,6 +53,9 @@
     },
     "quantities": {
       "type": "json"
+    },
+    "lastOrderDate": {
+      "type": "datetime"
     }
   }
 }
