@@ -8,9 +8,6 @@ module.exports = {
   create: async (ctx, next) => {
     const inputData = ctx.request.body.data;
     try {
-      const { totalAmount, productsDetails } = inputData;
-      delete inputData.totalAmount;
-      delete inputData.productsDetails;
       // Create new subscription
       const frequency = inputData.frequency;
       const now = new Date();
@@ -32,20 +29,16 @@ module.exports = {
         data: {
           ...inputData,
           nextOrderDate: nextOrderDate.toISOString(),
+        },
+        populate: {
+          user: true,
+          products: true
         }
       })
-      // Create new order.
-      await strapi.documents('api::order.order').create({
-        data: {
-          subscription: newSubscription.id,
-          user: inputData.user,
-          products: inputData.productsDetails,
-          productsDetails: productsDetails,
-          totalAmount: totalAmount,
-          orderStatus: 'Pendiente',
-          orderDate: now.toISOString(),
-        }
-      })
+      // Compare nextOrderDate with now. If they are the same, create a new order.
+      if (now.toISOString() === nextOrderDate.toISOString()) {
+        await strapi.service('api::order.order').createOrder(newSubscription);
+      }
       ctx.body = newSubscription;
     } catch (err) {
       ctx.body = err;

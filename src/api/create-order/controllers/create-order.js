@@ -8,39 +8,23 @@ module.exports = {
   create: async (ctx, next) => {
     const inputData = ctx.request.body.data;
     try {
-      // Create new order.
-      const newOrderDate = new Date();
-      const data = await strapi.documents('api::order.order').create({
-        data: {
-          ...inputData,
-          orderStatus: 'Pendiente',
-          orderDate: newOrderDate.toISOString(),
-        },
+      const { subscription } = inputData;
+
+      // Check if subscription exists.
+      const subscriptionData = await strapi.documents('api::subscription.subscription').findOne({
+        documentId: subscription,
         populate: {
-          subscription: true
+          user: true,
+          products: true
         }
-      })
-      // Get subscription and update the next order date.
-      const subscription = await strapi.documents('api::subscription.subscription').findOne({
-        documentId: data.subscription.documentId
       });
-      const frequency = subscription.frequency;
-      switch (frequency) {
-        case 'Mensual':
-          subscription.nextOrderDate = new Date(newOrderDate.setMonth(newOrderDate.getMonth() + 1));
-          break;
-        case 'Semanal':
-          subscription.nextOrderDate = new Date(newOrderDate.setDate(newOrderDate.getDate() + 7));
-          break;
+      if (!subscriptionData) {
+        return ctx.notFound('Error en la solicitud: la suscripción no fue encontrada.');
       }
-      // Update subscription.
-      await strapi.documents('api::subscription.subscription').update({
-        documentId: subscription.documentId,
-        data: {
-          nextOrderDate: subscription.nextOrderDate
-        }
-      })
-      ctx.body = data;
+
+      const order = await strapi.service('api::order.order').createOrder(subscriptionData);
+
+      ctx.body = order;
     } catch (err) {
       ctx.body = err;
     }
