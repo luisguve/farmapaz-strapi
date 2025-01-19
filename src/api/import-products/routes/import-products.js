@@ -9,5 +9,14 @@ module.exports = {
         middlewares: [],
       },
     },
+    {
+      method: 'PUT',
+      path: '/edit-product/:id',
+      handler: 'import-products.update',
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };

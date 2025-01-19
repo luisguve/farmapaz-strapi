@@ -29,6 +29,64 @@ function sanitize_title(str) {
  */
 
 module.exports = {
+  update: async (ctx, next) => {
+    try {
+      const productId = ctx.params.id;
+      const productData = ctx.request.body.data;
+
+      const product = await strapi.documents('api::product.product').update({
+        documentId: productId,
+        data: productData
+      })
+
+      // Find each order that could not be processed for insufficient stock
+      let unsatisfiedOrders = await strapi.documents('api::order.order').findMany({
+        filters: {
+          orderStatus: {
+            $eq: 'Insatisfecha'
+          }
+        },
+        populate: ['products']
+      });
+
+      // Filter unsatisfied orders that have the updated product
+      unsatisfiedOrders = unsatisfiedOrders.filter(order => order.products.some(product => product.documentId === productId));
+      unsatisfiedOrders.map(async order => {
+        const { productsDetails } = order;
+        await Promise.all(order.products.map(async product => {
+          if (productsDetails[product.id].outOfStock) {
+            // check if product stock is sufficient
+            if (product.stock >= productsDetails[product.id].quantity) {
+              // update product stock, then set outOfStock to false in productsDetails
+              await strapi.documents('api::product.product').update({
+                documentId: product.documentId,
+                data: {
+                  stock: product.stock - productsDetails[product.id].quantity,
+                }
+              });
+              productsDetails[product.id].outOfStock = false;
+            }
+          }
+        }));
+        const newOrderData = {
+          productsDetails: JSON.stringify(productsDetails)
+        }
+        // Check if every product in the order is able to be delivered.
+        const isOrderReady = Object.values(productsDetails).every(product => !product.outOfStock);
+        if (isOrderReady) {
+          newOrderData.orderStatus = 'Pendiente';
+        }
+        await strapi.documents('api::order.order').update({
+          documentId: order.documentId,
+          data: newOrderData
+        });
+      });
+
+      ctx.body = product;
+    } catch (err) {
+      ctx.body = err;
+    }
+  },
   importProducts: async (ctx, next) => {
     try {
       const excelFile = ctx.request.files.file;
@@ -138,16 +196,18 @@ module.exports = {
             }
           }
         }))
-        // Check if all products were updated.
-        if (Object.values(productsDetails).every(product => !product.outOfStock)) {
-          // Update order status to 'Pendiente'.
-          await strapi.documents('api::order.order').update({
-            documentId: order.documentId,
-            data: {
-              orderStatus: 'Pendiente'
-            }
-          });
+        const newOrderData = {
+          productsDetails: JSON.stringify(productsDetails)
         }
+        // Check if every product in the order is able to be delivered.
+        const isOrderReady = Object.values(productsDetails).every(product => !product.outOfStock);
+        if (isOrderReady) {
+          newOrderData.orderStatus = 'Pendiente';
+        }
+        await strapi.documents('api::order.order').update({
+          documentId: order.documentId,
+          data: newOrderData
+        });
       });
 
       ctx.body = {
