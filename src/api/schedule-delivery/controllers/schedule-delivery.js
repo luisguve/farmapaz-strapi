@@ -11,13 +11,14 @@ module.exports = {
       const data = await strapi.documents('api::delivery.delivery').create({
         data: inputData
       })
-      // Change status of every order to "En proceso"
+      // Change status of every order to "En proceso" and deliveryDate to now
       const ordersIds = inputData.orders;
       for (let i = 0; i < ordersIds.length; i++) {
         await strapi.db.query('api::order.order').update({
           where: { id: ordersIds[i] },
           data: {
-            orderStatus: "En proceso"
+            orderStatus: "En proceso",
+            deliveryDate: new Date()
           },
         });
       }
