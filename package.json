@@ -12,6 +12,7 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "@flydotio/litestream": "^1.0.1",
     "@strapi/plugin-cloud": "5.7.0",
     "@strapi/plugin-users-permissions": "5.7.0",
     "@strapi/strapi": "5.7.0",
@@ -19,6 +20,8 @@
     "exceljs": "^4.4.0",
     "fs-extra": "^10.0.0",
     "mime-types": "^2.1.27",
+    "pg": "^8.13.1",
+    "pg-connection-string": "^2.7.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
@@ -33,5 +36,11 @@
   },
   "strapi": {
     "uuid": "e06a0e79-5b2e-47c4-8bca-1a83d4f0d10a"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.2"
+  },
+  "dockerfile": {
+    "litestream": true
   }
 }
