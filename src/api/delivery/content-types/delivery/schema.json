@@ -30,6 +30,7 @@
     "deliveryStatus": {
       "type": "enumeration",
       "enum": [
+        "En espera",
         "En proceso",
         "Finalizada"
       ],

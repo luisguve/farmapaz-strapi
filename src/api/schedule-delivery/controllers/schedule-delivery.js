@@ -9,7 +9,8 @@ module.exports = {
     try {
       const inputData = ctx.request.body.data;
       const data = await strapi.documents('api::delivery.delivery').create({
-        data: inputData
+        data: inputData,
+        deliveryStatus: 'En espera'
       })
       // Change status of every order to "En proceso" and deliveryDate to now
       const ordersIds = inputData.orders;

@@ -27,7 +27,7 @@ module.exports = createCoreController('api::subscription.subscription', ({ strap
     for (const subscription of subscriptions) {
       await strapi.service('api::order.order').createOrder(subscription);
     }
-    ctx.body = 'ok';
+    ctx.body = { orders: subscriptions.length };
   },
   async cancelSubscription(ctx) {
     try {

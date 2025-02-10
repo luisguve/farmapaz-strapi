@@ -22,22 +22,6 @@ module.exports = {
       start: (page - 1) * 10
     })
     orders = orders.filter(order => {
-      const dateInput = new Date(order.deliveryDate);
-
-      // Get today's date without time.
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      // Get the date without time.
-      const orderDate = new Date(dateInput);
-      orderDate.setHours(0, 0, 0, 0);
-      
-      // Check if the order date is less than or equal to today's date.
-      const isValidDate = orderDate <= today;
-      // If not, this order is not able to be delivered.
-      if (!isValidDate) {
-        return false;
-      }
       // Check if the order has an ongoing delivery.
       const hasOngoingDelivery = order.deliveries.some(delivery => delivery.deliveryStatus !== 'Finalizada');
       // If not, this order is able to be delivered.
@@ -66,22 +50,6 @@ module.exports = {
       start: (page - 1) * 10
     })
     orders = orders.filter(order => {
-      const dateInput = new Date(order.deliveryDate);
-
-      // Get today's date without time.
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      // Get the date without time.
-      const orderDate = new Date(dateInput);
-      orderDate.setHours(0, 0, 0, 0);
-      
-      // Check if the order date is less than or equal to today's date.
-      const isValidDate = orderDate <= today;
-      // If not, this order is not able to be delivered.
-      if (!isValidDate) {
-        return false;
-      }
       // Check if the order has an ongoing delivery.
       const hasOngoingDelivery = order.deliveries.some(delivery => delivery.deliveryStatus !== 'Finalizada');
       // If not, this order is able to be delivered.

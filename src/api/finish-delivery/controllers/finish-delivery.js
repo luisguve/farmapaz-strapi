@@ -21,7 +21,7 @@ module.exports = {
       const { orders } = data;
       // Change status of every order that wasn't delivered to "Pospuesta"
       await Promise.all(orders.map(async order => {
-        if (order.orderStatus === "En proceso") {
+        if (["En proceso", "En espera"].includes(order.orderStatus)) {
           await strapi.documents('api::order.order').update({
             documentId: order.documentId,
             data: {
